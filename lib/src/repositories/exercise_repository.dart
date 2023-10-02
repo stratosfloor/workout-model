@@ -47,11 +47,11 @@ class ExerciseRepository {
     int? sets,
     double? weight,
   }) {
-    int index = _exercises.indexWhere((e) => e.id == exercise.id);
-    if (index == -1) {
+    var existingExercise = _exerciseBox.get(exercise.id);
+    if (existingExercise == null) {
       throw Exception('Exercise not found');
     }
-    final newEx = Exercise(
+    final newExercise = Exercise(
       name: name ?? exercise.name,
       description: description ?? exercise.description,
       repetitions: repetitions ?? exercise.repetitions,
@@ -59,14 +59,14 @@ class ExerciseRepository {
       sets: sets ?? exercise.sets,
       weight: weight ?? exercise.weight,
     );
-    _exercises[index] = newEx;
-    return _exercises[index];
+    _exerciseBox.put(newExercise.id, newExercise.serialize());
+    return newExercise;
   }
 
   bool delete(String id) {
-    int index = _exercises.indexWhere((r) => r.id == id);
-    if (index >= 0) {
-      _exercises.removeAt(index);
+    var existingExercise = _exerciseBox.get(id);
+    if (existingExercise != null) {
+      _exerciseBox.delete(id);
       return true;
     }
     return false;
