@@ -17,6 +17,11 @@ class ExerciseRepository {
     if (!Hive.isBoxOpen('exercises')) {
       _exerciseBox = await Hive.openBox('exercises');
     }
+    /*
+      Empty box every time we initalize
+      Only for testing
+    */
+    _exerciseBox.clear();
     print('Box is open');
   }
 
@@ -59,7 +64,7 @@ class ExerciseRepository {
       sets: sets ?? exercise.sets,
       weight: weight ?? exercise.weight,
     );
-    _exerciseBox.put(newExercise.id, newExercise.serialize());
+    _exerciseBox.put(exercise.id, newExercise.serialize());
     return newExercise;
   }
 
