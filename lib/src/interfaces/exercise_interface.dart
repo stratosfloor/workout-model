@@ -2,9 +2,13 @@ sealed class Identifiable {
   String get id;
 }
 
-abstract interface class IExercise extends Identifiable {
+abstract class IExerciseDescription extends Identifiable {
   String get name;
   String get description;
+}
+
+abstract interface class IExercise extends Identifiable
+    implements IExerciseDescription {
   int? get repetitions;
   int? get restTime; // in seconds
   int? get sets;
