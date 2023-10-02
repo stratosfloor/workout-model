@@ -4,27 +4,29 @@ sealed class Identifiable {
   String get id;
 }
 
-abstract interface class IWorkout extends Identifiable {
+abstract interface class IWorkout<T extends IExercise> extends Identifiable {
   String get name;
   String get description;
-  List<IExercise> get exercises;
+  List<T> get exercises;
 }
 
-abstract interface class IWorkoutRepository {
-  IWorkout? get workout;
-  bool create(IWorkout workout);
+abstract interface class IWorkoutRepository<T extends IWorkout> {
+  T? get workout;
+  bool create(T workout);
   IWorkout read(String id);
-  IWorkout update(IWorkout workout);
+  IWorkout update(T workout);
   bool delete(String id);
-  List<IWorkout> list();
+  List<T> list();
 }
 
-abstract interface class IWorkoutManager {
-  IWorkout get workout;
-  startWorkout(IWorkout workout);
-  pausWorkout(IWorkout workout);
-  resumeWorkout(IWorkout workout);
-  addExerciseToWorkout(IWorkout workout, IExercise exercise);
+abstract interface class IWorkoutManager<T extends IWorkout,
+    V extends IExercise> {
+  T? get currentWorkout;
+  startWorkout(T workout);
+  pausWorkout(T workout);
+  resumeWorkout(T workout);
+  addExerciseToWorkout(T workout, V exercise);
+  removeExerciseFromWorkout(T workout, V exercise);
   /* Add performence field to IWorkout 
   {
     int? get performenceRepetitions;
@@ -32,7 +34,7 @@ abstract interface class IWorkoutManager {
     double? get performenceWeight; 
   }
    */
-  registerPerformance(IWorkout workout, IExercise exercise);
-  overviewWorkout(IWorkout workout);
-  endWorkout(IWorkout workout);
+  registerPerformance(T workout, V exercise);
+  overviewWorkout(T workout);
+  endWorkout(T workout);
 }
