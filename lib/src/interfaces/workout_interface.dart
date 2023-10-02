@@ -1,5 +1,11 @@
 import 'exercise_interface.dart';
 
+enum WorkoutStatus {
+  finished,
+  ongoing,
+  future,
+}
+
 sealed class Identifiable {
   String get id;
 }
@@ -11,9 +17,9 @@ abstract interface class IWorkout<T extends IExercise> extends Identifiable {
 }
 
 abstract interface class IWorkoutRepository<T extends IWorkout> {
-  bool create(T workout);
+  T? create(T workout);
   T? read(String id);
-  T? update(T workout, String name, String description);
+  T? update({required T workout, String? name, String? description});
   bool delete(String id);
   void clear();
   List<T> list();

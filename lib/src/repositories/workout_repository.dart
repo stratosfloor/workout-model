@@ -29,18 +29,19 @@ class WorkoutRepository implements IWorkoutRepository<Workout> {
 
   // TODO: Change to return created workout
   @override
-  bool create(Workout workout) {
+  Workout? create(Workout workout) {
     if (!Hive.isBoxOpen('workouts')) {
       throw StateError('Please await WorkoutRepository initalize method');
     }
     var exisitingWorkout = _workoutBox.get(workout.id);
     if (exisitingWorkout != null) {
-      return false;
+      return null;
     }
     _workoutBox.put(workout.id, workout.serialize());
-    return true;
+    return workout;
   }
 
+  // TODO: serialize array of exercises
   @override
   Workout? read(String id) {
     var serialized = _workoutBox.get(id);
@@ -50,11 +51,11 @@ class WorkoutRepository implements IWorkoutRepository<Workout> {
   // TODO: Should add/remove exercises be here?
   //
   @override
-  Workout? update(
-    Workout workout,
+  Workout? update({
+    required Workout workout,
     String? name,
     String? description,
-  ) {
+  }) {
     var existingWorkout = _workoutBox.get(workout.id);
     if (existingWorkout == null) {
       throw Exception('Workout not found');
