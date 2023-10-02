@@ -4,7 +4,6 @@ import 'package:workout_model/src/models/exercise_model.dart';
 import 'package:hive/hive.dart';
 
 class ExerciseRepository {
-  final List<Exercise> _exercises = [];
   late Box<String> _exerciseBox;
 
   ExerciseRepository() {
