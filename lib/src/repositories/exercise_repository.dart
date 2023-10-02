@@ -5,7 +5,7 @@ import 'package:workout_model/src/models/exercise_model.dart';
 import 'package:hive/hive.dart';
 
 class ExerciseRepository implements IExceriseRepository<Exercise> {
-  late Box<String> _exerciseBox;
+  late Box _exerciseBox;
 
   ExerciseRepository() {
     Directory directory = Directory.current;
@@ -46,16 +46,29 @@ class ExerciseRepository implements IExceriseRepository<Exercise> {
   }
 
   @override
-  Exercise update(
-    String id,
-    Exercise exercise,
-  ) {
+  Exercise update({
+    required Exercise exercise,
+    String? name,
+    String? description,
+    int? repetitions,
+    int? restTime,
+    int? sets,
+    double? weight,
+  }) {
     var existingExercise = _exerciseBox.get(exercise.id);
     if (existingExercise == null) {
       throw Exception('Exercise not found');
     }
-    _exerciseBox.put(exercise.id, exercise.serialize());
-    return exercise;
+    final newExercise = Exercise(
+      name: name ?? exercise.name,
+      description: description ?? exercise.description,
+      repetitions: repetitions ?? exercise.repetitions,
+      restTime: restTime ?? exercise.restTime,
+      sets: sets ?? exercise.sets,
+      weight: weight ?? exercise.weight,
+    );
+    _exerciseBox.put(exercise.id, newExercise.serialize());
+    return newExercise;
   }
 
   @override

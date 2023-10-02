@@ -31,7 +31,15 @@ abstract interface class IExercise extends Identifiable
 abstract interface class IExceriseRepository<T extends IExercise> {
   bool create(T exercise);
   T? read(String id);
-  T update(String id, T exercise);
+  T update({
+    required T exercise,
+    String? name,
+    String? description,
+    int? repetitions,
+    int? restTime,
+    int? sets,
+    double? weight,
+  });
   bool delete(String id);
   void clear();
   List<T> list();
