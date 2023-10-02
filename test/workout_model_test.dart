@@ -133,8 +133,15 @@ void main() {
       expect(list.length, 4);
     });
     test('Test update', () {
-      final ex = repo.read('01');
-      final ex2 = repo.update(exercise: ex!, name: 'situps');
+      final updatedEx = Exercise(
+          id: '01',
+          name: 'situps',
+          description: 'description',
+          repetitions: 10,
+          restTime: 60,
+          sets: 3,
+          weight: 50);
+      final ex2 = repo.update(updatedEx.id, updatedEx);
       expect(ex2.name, 'situps');
     });
 
@@ -148,4 +155,6 @@ void main() {
       expect(repo.read('test'), isNull);
     });
   });
+
+  // TODO: Tests for workout model, repository and manager
 }

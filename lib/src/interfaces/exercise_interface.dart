@@ -7,6 +7,19 @@ abstract class IExerciseDescription extends Identifiable {
   String get description;
 }
 
+abstract class IExerciseDescriptionRepository<T extends IExerciseDescription> {
+  bool create(T exerciseDescription);
+  T? read(String id);
+  T update(
+    T exerciseDescription,
+    String? name,
+    String? description,
+  );
+  bool delete(String id);
+  void clear();
+  List<T> list();
+}
+
 abstract interface class IExercise extends Identifiable
     implements IExerciseDescription {
   int? get repetitions;
@@ -15,11 +28,11 @@ abstract interface class IExercise extends Identifiable
   double? get weight; // in kgs
 }
 
-abstract interface class IExceriseRepository {
-  IExercise? get exercise;
-  bool create(IExercise exercise);
-  IExercise read(String id);
-  IExercise update(IExercise exercise);
+abstract interface class IExceriseRepository<T extends IExercise> {
+  bool create(T exercise);
+  T? read(String id);
+  T update(String id, T exercise);
   bool delete(String id);
-  List<IExercise> list();
+  void clear();
+  List<T> list();
 }

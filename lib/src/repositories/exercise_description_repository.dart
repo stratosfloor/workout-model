@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
+import 'package:workout_model/src/interfaces/exercise_interface.dart';
 import 'package:workout_model/src/models/exercise_description_model.dart';
 
-class ExerciseDescriptionRepository {
-  late Box<String> _exerciseDescriptionBox;
+class ExerciseDescriptionRepository
+    implements IExerciseDescriptionRepository<ExerciseDescription> {
+  late Box _exerciseDescriptionBox;
 
   ExerciseDescriptionRepository() {
     Directory directory = Directory.current;
@@ -23,6 +25,7 @@ class ExerciseDescriptionRepository {
     print('Box is open');
   }
 
+  @override
   bool create(ExerciseDescription exercise) {
     if (!Hive.isBoxOpen('exercises-desc')) {
       throw StateError(
@@ -36,6 +39,7 @@ class ExerciseDescriptionRepository {
     return true;
   }
 
+  @override
   ExerciseDescription? read(String id) {
     var serialized = _exerciseDescriptionBox.get(id);
     return serialized != null
@@ -43,23 +47,26 @@ class ExerciseDescriptionRepository {
         : null;
   }
 
-  ExerciseDescription update({
-    required ExerciseDescription exercise,
+  @override
+  ExerciseDescription update(
+    ExerciseDescription exerciseDescription,
     String? name,
     String? description,
-  }) {
-    var existingExercise = _exerciseDescriptionBox.get(exercise.id);
+  ) {
+    var existingExercise = _exerciseDescriptionBox.get(exerciseDescription.id);
     if (existingExercise == null) {
       throw Exception('Exercise not found');
     }
     final newExercise = ExerciseDescription(
-      name: name ?? exercise.name,
-      description: description ?? exercise.description,
+      name: name ?? exerciseDescription.name,
+      description: description ?? exerciseDescription.description,
     );
-    _exerciseDescriptionBox.put(exercise.id, newExercise.serialize());
+    _exerciseDescriptionBox.put(
+        exerciseDescription.id, newExercise.serialize());
     return newExercise;
   }
 
+  @override
   bool delete(String id) {
     var existingExercise = _exerciseDescriptionBox.get(id);
     if (existingExercise != null) {
@@ -69,6 +76,12 @@ class ExerciseDescriptionRepository {
     return false;
   }
 
+  @override
+  void clear() {
+    _exerciseDescriptionBox.clear();
+  }
+
+  @override
   List<ExerciseDescription> list() => _exerciseDescriptionBox.values
       .map((serialized) => ExerciseDescription.deserialize(serialized))
       .toList();

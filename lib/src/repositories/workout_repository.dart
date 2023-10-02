@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
+import 'package:workout_model/src/interfaces/workout_interface.dart';
 
 import '../models/workout_model.dart';
 
-class WorkoutRepository {
+class WorkoutRepository implements IWorkoutRepository<Workout> {
   late Box _workoutBox;
 
   WorkoutRepository() {
@@ -27,6 +28,7 @@ class WorkoutRepository {
   }
 
   // TODO: Change to return created workout
+  @override
   bool create(Workout workout) {
     if (!Hive.isBoxOpen('workouts')) {
       throw StateError('Please await WorkoutRepository initalize method');
@@ -39,6 +41,7 @@ class WorkoutRepository {
     return true;
   }
 
+  @override
   Workout? read(String id) {
     var serialized = _workoutBox.get(id);
     return serialized != null ? Workout.deserialize(serialized) : null;
@@ -46,11 +49,12 @@ class WorkoutRepository {
 
   // TODO: Should add/remove exercises be here?
   //
-  Workout update({
-    required Workout workout,
+  @override
+  Workout? update(
+    Workout workout,
     String? name,
     String? description,
-  }) {
+  ) {
     var existingWorkout = _workoutBox.get(workout.id);
     if (existingWorkout == null) {
       throw Exception('Workout not found');
@@ -63,6 +67,7 @@ class WorkoutRepository {
     return newWorkout;
   }
 
+  @override
   bool delete(String id) {
     var existingWorkout = _workoutBox.get(id);
     if (existingWorkout != null) {
@@ -72,6 +77,12 @@ class WorkoutRepository {
     return false;
   }
 
+  @override
+  void clear() {
+    _workoutBox.clear();
+  }
+
+  @override
   List<Workout> list() => _workoutBox.values
       .map((serialized) => Workout.deserialize(serialized))
       .toList();

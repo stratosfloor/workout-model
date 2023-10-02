@@ -11,11 +11,11 @@ abstract interface class IWorkout<T extends IExercise> extends Identifiable {
 }
 
 abstract interface class IWorkoutRepository<T extends IWorkout> {
-  T? get workout;
   bool create(T workout);
-  IWorkout read(String id);
-  IWorkout update(T workout);
+  T? read(String id);
+  T? update(T workout, String name, String description);
   bool delete(String id);
+  void clear();
   List<T> list();
 }
 
