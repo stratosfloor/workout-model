@@ -63,12 +63,6 @@ void main() {
       // Additional setup goes here.
     });
 
-    test('Test listing exercises', () {
-      final list = repo.list();
-      expect(list, isNotEmpty);
-      expect(list.length, 6);
-    });
-
     test('Test create', () {
       final exercise = Exercise(
           id: '4654654',
@@ -78,11 +72,22 @@ void main() {
           restTime: 60,
           sets: 3,
           weight: 50);
-      repo.create(exercise);
+      var res = repo.create(exercise);
+      expect(res, true);
+    });
+
+    test('Test read', () {
       final res = repo.read('4654654');
       expect(res, isNotNull);
       expect(res?.description, 'Pressa för faaan');
     });
+
+    test('Test listing exercises', () {
+      final list = repo.list();
+      expect(list, isNotEmpty);
+      expect(list.length, 1);
+    });
+
     test('Test create 2', () {
       repo.create(Exercise(
           id: '01',
@@ -110,12 +115,13 @@ void main() {
           weight: 50));
       final list = repo.list();
       expect(list, isNotNull);
-      expect(list.length, 6);
+      expect(list.length, 4);
     });
+
     test('Test create an exercise with existing id', () {
       final list = repo.list();
       expect(list, isNotNull);
-      expect(list.length, 6);
+      expect(list.length, 4);
       repo.create(Exercise(
           id: '01',
           name: 'bänkpress',
@@ -124,11 +130,7 @@ void main() {
           restTime: 60,
           sets: 3,
           weight: 50));
-      expect(list.length, 6);
-    });
-    test('Test read', () {
-      final ex = repo.read('01');
-      expect(ex?.name, 'bänkpress');
+      expect(list.length, 4);
     });
     test('Test update', () {
       final ex = repo.read('01');
