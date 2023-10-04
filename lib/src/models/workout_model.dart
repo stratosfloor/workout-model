@@ -35,8 +35,9 @@ class Workout implements IWorkout {
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
-      // TODO: Check if this is working ?!
-      exercises: json['exercises'].map((ex) => Exercise.deserialize(ex)),
+      exercises: (json['exercises'] as List)
+          .map((json) => Exercise.fromJson(json))
+          .toList(),
     );
   }
 
