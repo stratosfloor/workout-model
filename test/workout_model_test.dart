@@ -2,7 +2,9 @@ import 'package:test/test.dart';
 
 import 'dart:convert';
 import 'package:workout_model/src/models/exercise_model.dart';
+import 'package:workout_model/src/models/workout_model.dart';
 import 'package:workout_model/src/repositories/exercise_repository.dart';
+import 'package:workout_model/src/repositories/workout_repository.dart';
 
 void main() {
   group('Exercise model tests', () {
@@ -133,15 +135,8 @@ void main() {
       expect(list.length, 4);
     });
     test('Test update', () {
-      final updatedEx = Exercise(
-          id: '01',
-          name: 'situps',
-          description: 'description',
-          repetitions: 10,
-          restTime: 60,
-          sets: 3,
-          weight: 50);
-      final ex2 = repo.update(updatedEx.id, updatedEx);
+      final ex = repo.read('01');
+      final ex2 = repo.update(exercise: ex!, name: 'situps');
       expect(ex2.name, 'situps');
     });
 
@@ -153,6 +148,36 @@ void main() {
       expect(repo.read('test'), isNotNull);
       expect(repo.delete('test'), true);
       expect(repo.read('test'), isNull);
+    });
+  });
+  group('Workout repo', () {
+    final repo = WorkoutRepository();
+    repo.initalize();
+    setUp(() {
+      // Additional setup goes here.
+    });
+    test('Test workout model', () {
+      final workout = Workout(name: 'name', description: 'description');
+      expect(workout.name, 'name');
+    });
+    test('Test create returns workout', () {
+      final workout =
+          repo.create(Workout(name: 'Biffff', description: 'Kötta för faan'));
+      expect(workout!.name, 'Biffff');
+    });
+    test('Test list() ', () {
+      final list = repo.list();
+      expect(list, isNotNull);
+      expect(list, isNotEmpty);
+    });
+    // Här håller jag på
+    test('Test read created workout', () {
+      final workout = repo.create(
+          Workout(name: 'Överkropp', description: 'Träna ööööverkropp'));
+      final expectedWorkout = repo.read(workout!.id);
+      print(expectedWorkout?.serialize());
+      expect(expectedWorkout is Workout, true);
+      // expect(expectedWorkout?.name, 'Överkropp');
     });
   });
 
